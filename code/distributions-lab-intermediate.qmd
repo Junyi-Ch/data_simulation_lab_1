@@ -107,7 +107,7 @@ Tasks: - Simulate `n = 200` 0/1 outcomes with `p = 0.92` into `acc_df`. - Comput
 # TODO: create a simulated dataframe using rbinom (remember, you can look at the help for the function)
 # Hint: Use tibble() and rbinom(n=200, size=1, prob=0.92)
 # Complete this line:
-acc_df <- tibble(acc = rbinom(___, size = ___, prob = ___))
+acc_df <- tibble(acc = rbinom(n=200, size = 1, prob = 0.92))
 
 
 # TODO: summarise and count
@@ -115,7 +115,7 @@ acc_df <- tibble(acc = rbinom(___, size = ___, prob = ___))
 # Complete this structure:
 acc_df_summary <- acc_df |>
   summarise(
-    prop_correct = mean(___),  # Fill in the column name
+    prop_correct = mean(acc),  # Fill in the column name
     n = n()                    # This one is already done!
   )
 
@@ -127,21 +127,21 @@ print(acc_df_summary)
 ## TO DO: Make a histogram of these values
 # Hint: Use ggplot() with geom_histogram()
 # Complete this structure:
-ggplot(___, aes(x = ___)) +  # Fill in dataframe and column name
-  geom_histogram(binwidth = ___, alpha = ___) +  # Choose appropriate values
+ggplot(acc_df, aes(x = acc)) +  # Fill in dataframe and column name
+  geom_histogram(binwidth = 0.25, alpha = 0.85) +  # Choose appropriate values
   labs(title = "Simulated accuracy values", x = "Accuracy", y = "Count")
 ```
 
 ```{r}
 # TODO: plot overall proportion 
 # Hint:  use `stat_summary(fun = mean)` for the mean
-
+    
 # TODO: Plot some measure of variability (SD or 95% CI)
 # Hint: stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +
 # You have to give stat_summary an x-value, but since there isn't really one here you can just give it a label (e.g., "overall")
 
 # Complete this structure:
-ggplot(acc_df, aes(x = 'Overall', y = ___)) +  # Fill in the column name
+ggplot(acc_df, aes(x = 'Overall', y = acc)) +  # Fill in the column name
   stat_summary(fun = mean, geom = "point", size = 3) +
   stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +
   labs(x = NULL, y = "Proportion correct", title = "Accuracy")
@@ -160,11 +160,11 @@ Tasks: - Build a tibble with `condition` in {easy, hard}, 100 trials each. - Use
 
 # Complete this structure:
 acc2 <- tibble(
-  condition = rep(c("easy", "hard"), each = ___),  # Fill in number of trials per condition
-  block = rep(rep(1:4, each = ___), times = 2),   # Fill in trials per block
+  condition = rep(c("easy", "hard"), each = 100),  # Fill in number of trials per condition
+  block = rep(rep(1:4, each = 25), times = 2),   # Fill in trials per block
   acc = c(
-    rbinom(___, 1, 0.97),  # Fill in number of trials for easy condition
-    rbinom(___, 1, 0.87)   # Fill in number of trials for hard condition
+    rbinom(100, 1, 0.97),  # Fill in number of trials for easy condition
+    rbinom(100, 1, 0.87)   # Fill in number of trials for hard condition
   )
 )
 
@@ -177,9 +177,9 @@ acc2 |>
 # Hint: Use group_by() and summarise()
 # Complete this structure:
 acc_by_cb <- acc2 |>
-  group_by(___, ___) |>  # Fill in grouping variables
+  group_by(condition, block) |>  # Fill in grouping variables
   summarise(
-    prop_correct = mean(___),  # Fill in column name
+    prop_correct = mean(acc),  # Fill in column name
     trials = n(), 
     .groups = "drop"
   )
@@ -189,8 +189,8 @@ acc_by_cb <- acc2 |>
 # Complete this structure:
 acc_wide <- acc_by_cb |>
   pivot_wider(
-    names_from = ___,     # Fill in the column to become column names
-    values_from = ___     # Fill in the column to become values
+    names_from = condition,     # Fill in the column to become column names
+    values_from = prop_correct     # Fill in the column to become values
   )
 
 # View the results
@@ -227,9 +227,9 @@ r_shifted_lognorm <- function(n, t0, meanlog, sdlog) {
 
 # Complete this structure:
 rt_df <- tibble(
-  rt = r_shifted_lognorm(___, t0 = ___, meanlog = ___, sdlog = ___)  # Fill in the parameters
+  rt = r_shifted_lognorm(500, t0 = 300, meanlog = log(250), sdlog = .35)  # Fill in the parameters
 ) |>
-  mutate(log_rt = log(___))  # Fill in the column name
+  mutate(log_rt = log(rt))  # Fill in the column name
 
 # Check the first few rows
 head(rt_df)
@@ -243,7 +243,7 @@ Now look at their relationship -- hint is to use qplot, or you can use ggplot. Y
 # Complete one of these options:
 
 # Option 1: Using qplot (simpler)
-qplot(___, ___)  # Fill in the two column names
+qplot(rt_df$rt, rt_df$log_rt)  # Fill in the two column names
 
 # Option 2: Using ggplot (more flexible)
 ggplot(rt_df, aes(x = ___, y = ___)) +  # Fill in x and y column names
@@ -259,10 +259,10 @@ OK, now let's make some summaries. Use the summarize function to calculate the m
 # Complete this structure:
 rt_df_summary <- rt_df |>
   summarise(
-    mean_rt = mean(___),    # Fill in column name
-    median_rt = median(___), # Fill in column name
-    max_rt = max(___),      # Fill in column name
-    sd_rt = sd(___)         # Fill in column name
+    mean_rt = mean(rt),    # Fill in column name
+    median_rt = median(rt), # Fill in column name
+    max_rt = max(rt),      # Fill in column name
+    sd_rt = sd(rt)         # Fill in column name
   )
 
 # Print the results
@@ -284,8 +284,8 @@ Add a **condition** factor. Suppose invalid cues slow responses by \~**40 ms** o
 
 # Complete this structure:
 rt_df_valid_invalid <- tibble(
-  rt_valid = r_shifted_lognorm(___, t0 = ___, meanlog = ___, sdlog = ___),     # Fill in parameters for valid condition
-  rt_invalid = r_shifted_lognorm(___, t0 = ___, meanlog = ___, sdlog = ___)   # Fill in parameters for invalid condition (slower)
+  rt_valid = r_shifted_lognorm(500, t0 = 300, meanlog = log(250), sdlog = log(50)),     # Fill in parameters for valid condition
+  rt_invalid = r_shifted_lognorm(500, t0 = 300, meanlog = log(290), sdlog = log(50))   # Fill in parameters for invalid condition (slower)
 )
 
 # Check the first few rows
@@ -300,9 +300,9 @@ Use `pivot_longer` to make this a long dataframe, where `rt` is just one column,
 # Complete this structure:
 rt_df_valid_invalid_longer <- rt_df_valid_invalid |>
   pivot_longer(
-    cols = c(___, ___),        # Fill in the column names to pivot
-    values_to = ___,           # Fill in the name for the values column
-    names_to = ___             # Fill in the name for the names column
+    cols = c('rt_valid','rt_invalid'),        # Fill in the column names to pivot
+    values_to = 'rt',           # Fill in the name for the values column
+    names_to = 'condition'             # Fill in the name for the names column
   )
 
 # Check the first few rows
@@ -317,10 +317,10 @@ Now, use `group_by(condition)` before commuting your summaries in tidyverse -- y
 # Hint: Use group_by(condition) then summarise()
 # Complete this structure:
 valid_invalid_summary <- rt_df_valid_invalid_longer |>
-  group_by(___) |>  # Fill in the grouping variable
+  group_by(condition) |>  # Fill in the grouping variable
   summarise(
-    mean_rt = mean(___),  # Fill in column name
-    sd_rt = sd(___),      # Fill in column name
+    mean_rt = mean(rt),  # Fill in column name
+    sd_rt = sd(rt),      # Fill in column name
     n = n()
   )
 
@@ -330,12 +330,13 @@ print(valid_invalid_summary)
 
 Now, make some sort of visual of the two distributions. Give the raw dataframe to ggplot, and use `geom_density` to plot the density (you can toggle `alpha` here to change the transparency). Use `fill=condition` within `aes` to specify that the two conditions should have different colors.
 
-```{R}
-## TODO: Use ggplot to make density plot of simulated data
+```{r}
+# TODO: Use ggplot to make density plot of simulated data
 # Hint: Use geom_density() with fill=condition in aes()
 # Complete this structure:
-ggplot(___, aes(x = ___, fill = ___)) +  # Fill in dataframe and column names
-  geom_density(alpha = ___) +            # Fill in alpha value (0-1)
+
+ggplot(rt_df_valid_invalid_longer, aes(x=rt, fill = condition)) +  # Fill in dataframe and column names
+  geom_density(alpha = 0.85) +            # Fill in alpha value (0-1)
   labs(title = "Cueing Cost as Shift in Distribution", x = "RT (ms)", y = "Density")
 ```
 
