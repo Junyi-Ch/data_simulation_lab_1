@@ -1,0 +1,45 @@
+project:
+  title: "Data Simulation Lab 1"
+  type: website
+  output-dir: _output
+  render: 
+    - "index.qmd"
+    - "distributions-lab.qmd"
+    - "distributions-lab-withsolutions.qmd"
+    - "*.md"
+    - "*.ipynb"
+
+engine: jupyter
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    theme: cosmo
+    highlight-style: tango
+    df-print: kable
+
+execute: 
+  cache: true
+ipynb-shell-interactivity: all
+
+website: 
+  title: "Data Simulation Lab 1"
+  back-to-top-navigation: true
+  repo-url: https://github.com/psyc-201/data_simulation_lab_1
+  repo-actions: [source, issue]
+  page-footer: "2025, Bria Long"
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "Introduction"
+        href: index.qmd
+      - text: "Lab Instructions"
+        href: distributions-lab.qmd
+      - text: "Intermediate Version"
+        href: distributions-lab-intermediate.qmd
+      - text: "Solutions"
+        href: distributions-lab-withsolutions.qmd
+      - text: "Python Version"
+        href: distributions_lab.py

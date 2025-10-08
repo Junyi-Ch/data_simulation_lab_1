@@ -1,0 +1,13 @@
+{
+  "line-length": 88,
+  "target-version": "py39",
+  "include": "\\.py$",
+  "extend-exclude": [
+    ".*\\.pyc$",
+    ".*/__pycache__/.*",
+    ".*/migrations/.*",
+    ".*/venv/.*",
+    ".*/env/.*",
+    ".*/\\.pixi/.*"
+  ]
+}

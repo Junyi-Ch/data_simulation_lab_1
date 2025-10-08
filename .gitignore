@@ -1,1 +1,35 @@
-/distributions-lab-student-lognormal_files
+# R and RStudio
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Quarto output
+code/_output/
+*.html
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Pixi
+.pixi/
+pixi.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE (keep project settings, ignore user-specific)
+.vscode/launch.json
+
+# Temporary files
+*.tmp
+*.temp

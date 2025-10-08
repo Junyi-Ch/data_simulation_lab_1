@@ -1,0 +1,69 @@
+[workspace]
+name = "data-simulation-lab-1"
+version = "0.1.0"
+authors = ["Bria Long"]
+channels = ["conda-forge", "pytorch", "bioconda"]
+platforms = ["osx-arm64", "osx-64"]
+repository = "https://github.com/psyc-201/data_simulation_lab_1"
+
+# Use pixi add someLibrary to install Python packages
+# Use pixi add r-someLibrary to install R packages
+# This file will be auto-updated for you!
+[dependencies]
+python = ">=3.11" 
+r-base = ">4.3"
+numpy = ">=1.21.0"
+pandas = ">=1.3.0"
+scipy = ">=1.7.0"
+matplotlib = ">=3.5.0"
+seaborn = ">=0.13.2,<0.14"
+ipykernel = ">=6.29.5,<7"
+ruff = ">=0.12.2,<0.13"
+jupyter = ">=1.1.1,<2"
+quarto = ">=1.7.32,<2"
+jupyter-cache = ">=1.0.1,<2"
+r-tidyverse = ">=2.0.0,<3"
+r-knitr = ">=1.50,<2"
+r-languageserver = ">=0.3.16,<0.4"
+r-rmarkdown = ">=2.29,<3"
+r-irkernel = ">=1.3.2,<2"
+r-rlang = ">=1.1.6,<2"
+r-jsonlite = ">=2.0.0,<3"
+
+# Python syntax-checking settings
+[tool.ruff]
+extend-include = ["*.ipynb", "*.qmd"]
+[tool.ruff.lint]
+ignore = ["W292", "E501", "E731", "E741", "F401", "E703"]
+
+# Tasks are shell commands we can call with pixi run myTask
+# We include some that configure the environment for you when you
+# use pixi run setup
+[tasks]
+setup = [
+{ task = "setup_rkernel" }, 
+{ task = "setup_pykernel" }]
+
+render = "quarto preview code/"
+r = "R"
+
+[tasks.preview]
+args =["name"]
+cmd = "quarto preview code/{{ name }}"
+
+[tasks.convert]
+args =["name"]
+cmd = "quarto convert code/{{ name }}"
+
+# Register an R kernelspec INSIDE THIS ENV (no HOME pollution).
+# prefix := dirname(R.home('share')) → <env>/share/jupyter/kernels
+[tasks.setup_rkernel]
+cmd = """R -q -e "prefix <- normalizePath(file.path(R.home('home'), '..', '..')); IRkernel::installspec(name='data-simulation-lab-1-R', displayname='R (data-simulation-lab-1)', user=FALSE, prefix=prefix, verbose=TRUE)" """
+
+# Register a Python kernelspec INSIDE THIS ENV (no HOME pollution).
+# prefix := sysconfig.get_paths()['data'] → <env>/share/jupyter/kernels
+[tasks.setup_pykernel]
+cmd = "python -c \"import sys, sysconfig, subprocess; p=sysconfig.get_paths()['data']; subprocess.check_call([sys.executable,'-m','ipykernel','install','--name','data-simulation-lab-1-py','--display-name','Python (data-simulation-lab-1)','--prefix',p])\""
+
+[tasks.kernels]
+cmd = "jupyter kernelspec list"

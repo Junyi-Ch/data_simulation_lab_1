@@ -1,0 +1,67 @@
+---
+title: "Data Simulation Lab 1"
+subtitle: "Psych 201a"
+author: "Bria Long"
+date: "`r format(Sys.Date())`"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: visual
+---
+
+## Welcome to Data Simulation Lab 1
+
+This lab introduces you to statistical distributions and data simulation techniques commonly used in psychological research. You'll learn how to generate and visualize synthetic datasets using both R and Python.
+
+### Lab Goals
+
+1.  **Understand distributions**: Learn how normal, binomial, and lognormal distributions describe behavioral data (accuracy, RTs, individual variability)
+2.  **Practice simulation**: Generate and visualize synthetic datasets using tidyverse functions
+3.  **Reproducible reports**: Learn how to write reproducible lab reports with inline statistics in Quarto
+
+### Lab Structure
+
+This lab includes multiple versions to support different learning styles:
+
+-   **Lab Instructions** (`distributions-lab.qmd`): Complete lab with full instructions
+-   **Intermediate Version** (`distributions-lab-intermediate.qmd`): Scaffolded version with placeholders to fill in
+-   **Solutions** (`distributions-lab-withsolutions.qmd`): Complete solutions for reference
+-   **Python Version** (`distributions_lab.py`): Python implementation using pandas and matplotlib
+
+### Getting Started
+
+1.  **Install dependencies**: `pixi install`
+2.  **Setup kernels**: `pixi run setup`
+3.  **Start R console**: `pixi run r`
+4.  **Live preview**: `pixi run render`
+
+### Key Topics Covered
+
+-   **Normal distributions**: Simulating continuous data
+-   **Binomial distributions**: Modeling accuracy and binary outcomes
+-   **Lognormal distributions**: Simulating reaction times
+-   **Multi-participant experiments**: Individual differences and group-level analysis
+-   **Data visualization**: Creating publication-ready plots
+
+### Prerequisites
+
+-   Basic familiarity with R or Python
+-   Understanding of basic statistical concepts (mean, standard deviation, probability)
+-   Familiarity with data frames/tibbles
+
+### Resources
+
+-   [Quarto Documentation](https://quarto.org/docs/)
+-   [Tidyverse Documentation](https://www.tidyverse.org/)
+-   [Pandas Documentation](https://pandas.pydata.org/)
+-   [Matplotlib Documentation](https://matplotlib.org/)
+
+------------------------------------------------------------------------
+
+*Happy coding! 🎉*

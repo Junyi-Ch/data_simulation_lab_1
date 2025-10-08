@@ -1,0 +1,34 @@
+{
+    "r.rterm.mac": "pixi run r",
+    "r.rterm.linux": "pixi run r",
+    "r.rterm.windows": "pixi run r",
+    "r.alwaysUseActiveTerminal": true,
+    "python.defaultInterpreterPath": ".pixi/envs/default/bin/python",
+    "python.terminal.activateEnvironment": false,
+    "quarto.path": ".pixi/envs/default/bin/quarto",
+    "files.associations": {
+        "*.qmd": "quarto"
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+    },
+    "[r]": {
+        "editor.defaultFormatter": "REditorSupport.r",
+        "editor.formatOnSave": true
+    },
+    "[quarto]": {
+        "editor.defaultFormatter": "quarto.quarto"
+    },
+    "jupyter.defaultKernel": "data-simulation-lab-1-py",
+    "jupyter.kernels.filter": [
+        {
+            "path": ".*",
+            "type": "pythonEnvironment"
+        }
+    ]
+}
