@@ -36,10 +36,12 @@ This lab includes multiple versions to support different learning styles:
 
 ### Getting Started
 
-1.  **Install dependencies**: `pixi install`
-2.  **Setup kernels**: `pixi run setup`
-3.  **Start R console**: `pixi run r`
-4.  **Live preview**: `pixi run render`
+1.  **Fork the repository** on GitHub
+2.  **Clone your fork**: `git clone https://github.com/YOUR_USERNAME/data_simulation_lab_1.git`
+3.  **Install dependencies**: `pixi install`
+4.  **Setup kernels**: `pixi run setup`
+5.  **Start R console**: `pixi run r`
+6.  **Live preview**: `pixi run render`
 
 ### Key Topics Covered
 

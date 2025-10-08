@@ -8,49 +8,49 @@ Welcome to the first data simulation lab for Psych 201a! This lab introduces you
 - **Practice simulation**: Generate and visualize synthetic datasets using tidyverse functions  
 - **Reproducible reports**: Learn how to write reproducible lab reports with inline statistics in Quarto
 
-## One Time Setup
-
-### 1. Prerequisites
+## Prerequisites
 
 Make sure you have the following installed:
 - [Homebrew](https://brew.sh) (macOS package manager)
 - [Git](https://git-scm.com/) and [GitHub CLI](https://cli.github.com/)
 - [Pixi](https://pixi.sh/) (package manager for R and Python)
 
-### 2. Install Pixi
+## Getting Started
+
+### 1. Fork this Repository
+
+1. Go to [https://github.com/psyc-201/data_simulation_lab_1](https://github.com/psyc-201/data_simulation_lab_1)
+2. Click the "Fork" button in the top-right corner
+3. This creates a copy of the repository under your own GitHub account
+
+### 2. Clone Your Fork
 
 ```bash
-curl -fsSL https://pixi.sh/install.sh | bash
-```
-
-### 3. Clone this Repository
-
-```bash
-git clone https://github.com/psyc-201/data_simulation_lab_1.git
+git clone https://github.com/YOUR_USERNAME/data_simulation_lab_1.git
 cd data_simulation_lab_1
 ```
 
-## Getting Started
+Replace `YOUR_USERNAME` with your actual GitHub username.
 
-### 1. Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pixi install
 ```
 
-### 2. Setup R & Python Kernels
+### 4. Setup R & Python Kernels
 
 ```bash
 pixi run setup
 ```
 
-### 3. Open in VS Code
+### 5. Open in VS Code
 
 1. Open VS Code and use the account icon to login to your GitHub account
 2. Open the folder you cloned: File > Open
 3. Accept any pop-ups to configure VS Code with necessary extensions
 
-### 4. Start Working
+### 6. Start Working
 
 - **R Console**: `pixi run r`
 - **Live Preview**: `pixi run render`
