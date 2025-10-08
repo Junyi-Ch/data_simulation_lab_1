@@ -1,0 +1,411 @@
+---
+title: "Simulations & Tidyverse lab: Intermediate Version"
+subtitle: "Psych 201a"
+author: "Bria Long"
+date: "`r format(Sys.Date())`"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+  pdf: default
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: visual
+---
+
+> **Goals:** (1) Understand how normal, binomial, and lognormal distributions describe behavioral data (accuracy, RTs, individual variability). (2) Practice generating and visualizing synthetic datasets using tidyverse functions. (3) Learn how to write reproducible lab reports with inline statistics in Quarto.
+
+> **Workflow:** This intermediate version provides starter code and scaffolding to help you complete each task. Fill in the missing pieces and adapt the provided code.
+
+## Setup
+
+```{r}
+#| label: setup
+library(tidyverse)
+set.seed(2025)
+
+```
+
+## A. Normal distribution (worked example)
+
+Here, let's try to simulate some values from a normal distribution with a mean of 0 and a SD of 1.
+
+The `rnorm` function is used below here.
+
+```{r}
+
+# you can play around with these
+n <- 300 # number of datapoints
+mu <- 0 # mean of the distribution
+sd_norm <- 1 # sd of the distribution
+
+# rnorm is your simulation function here
+# take a look at how it's used by typing ``? rnorm``
+## note that this function is taking the inputs you specified above -- it doesn't matter what these are called
+norm_df <- tibble(sim_values = rnorm(n, mu, sd_norm))
+
+# so you know, this code would do the same thing
+# norm_df <- tibble(sim_values = rnorm(300, 0, 1))
+
+# okay, check out the top of this dataframe
+head(norm_df)
+```
+
+Calculate some basic summaries of this dataframe and print them out
+
+```{r}
+# TODO: Calculate mean, sd, and n for norm_df
+# Hint: Use summarise() with mean(), sd(), and n()
+# Start with this structure and fill in the missing parts:
+
+norm_df_summary <- norm_df |> 
+  summarise(
+    mean = mean(___),  # Fill in the column name
+    sd = sd(___),      # Fill in the column name  
+    n = n()            # This one is already done!
+  )
+
+# Print the results
+print(norm_df_summary)
+
+# What happens if you increase the "n"? How do these summaries change?
+```
+
+I'm going to now plot a histogram of these values. We're going to spend a lot of time on figuring out how to plot things later -- but here you can start learning the basics.
+
+The first argument to the ggplot function is your dataframe -- here, `norm_df`. The `aes` is where you specify what is on the x-axis, y-axis, colors, etc. These values come from the columns in `norm_df`.
+
+`Alpha` is transparency. `binwidth` is how big the histogram bins are.
+
+```{r}
+ggplot(norm_df, aes(x=sim_values)) +
+  geom_histogram(binwidth = 0.25, alpha = 0.85) +
+  labs(title = "Simulated values", x = "Value", y = "Count")
+```
+
+**Exercise:** change `mu` and `sd_norm` to two other combos (e.g., 10 & 2; 10 & 5).
+
+Write one sentence with an inline mean (e.g., `r round(mean(norm_df$sim_values), 2)`).
+
+Bonus: Compute another kind of summary statistic on the dataset Bonus: Simulate another distribution and also plot it on the same histogram (you can make it a different color)
+
+## B. Binomial data (accuracy)
+
+Okay, normally distributed data is great, but often not what we're working with in practice. Often, we have accuracies or reaction times.
+
+First, we'll think about accuracy. To do so, we'll practice `rbinom()` and how to summarize it using some tidyverse functions. You should be able to adapt the code we just worked through but with a new function --
+
+### B1 --- Bernoulli accuracy
+
+Tasks: - Simulate `n = 200` 0/1 outcomes with `p = 0.92` into `acc_df`. - Compute **proportion correct** and a **count table** with `count()`. - Plot overall proportion with `stat_summary()`.
+
+```{r}
+#| label: binom-bernoulli
+# TODO: create a simulated dataframe using rbinom (remember, you can look at the help for the function)
+# Hint: Use tibble() and rbinom(n=200, size=1, prob=0.92)
+# Complete this line:
+acc_df <- tibble(acc = rbinom(___, size = ___, prob = ___))
+
+
+# TODO: summarise and count
+# Hint: Use summarise() to calculate proportion correct and n
+# Complete this structure:
+acc_df_summary <- acc_df |>
+  summarise(
+    prop_correct = mean(___),  # Fill in the column name
+    n = n()                    # This one is already done!
+  )
+
+# Print the results
+print(acc_df_summary)
+```
+
+```{r}
+## TO DO: Make a histogram of these values
+# Hint: Use ggplot() with geom_histogram()
+# Complete this structure:
+ggplot(___, aes(x = ___)) +  # Fill in dataframe and column name
+  geom_histogram(binwidth = ___, alpha = ___) +  # Choose appropriate values
+  labs(title = "Simulated accuracy values", x = "Accuracy", y = "Count")
+```
+
+```{r}
+# TODO: plot overall proportion 
+# Hint:  use `stat_summary(fun = mean)` for the mean
+
+# TODO: Plot some measure of variability (SD or 95% CI)
+# Hint: stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +
+# You have to give stat_summary an x-value, but since there isn't really one here you can just give it a label (e.g., "overall")
+
+# Complete this structure:
+ggplot(acc_df, aes(x = 'Overall', y = ___)) +  # Fill in the column name
+  stat_summary(fun = mean, geom = "point", size = 3) +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +
+  labs(x = NULL, y = "Proportion correct", title = "Accuracy")
+```
+
+### B2 --- Two conditions + blocks (tidy)
+
+Tasks: - Build a tibble with `condition` in {easy, hard}, 100 trials each. - Use different probabilities (e.g., 0.97 vs 0.87). - Summarise `prop_correct` by `condition × block` and `pivot_wider()`. - Bonus: Add a `block` or `participant` factor
+
+```{r}
+#| label: binom-conditions-blocks
+# TODO: simulate
+# Hint: Create a tibble with condition, block, and acc columns
+# Use rep() to repeat conditions and blocks appropriately
+# Use rbinom() with different probabilities for easy vs hard conditions
+
+# Complete this structure:
+acc2 <- tibble(
+  condition = rep(c("easy", "hard"), each = ___),  # Fill in number of trials per condition
+  block = rep(rep(1:4, each = ___), times = 2),   # Fill in trials per block
+  acc = c(
+    rbinom(___, 1, 0.97),  # Fill in number of trials for easy condition
+    rbinom(___, 1, 0.87)   # Fill in number of trials for hard condition
+  )
+)
+
+# Check per-block counts
+acc2 |>
+  add_count(block, name = "n_block") |>
+  distinct(block, n_block)
+
+# TODO: Summaries by condition × block
+# Hint: Use group_by() and summarise()
+# Complete this structure:
+acc_by_cb <- acc2 |>
+  group_by(___, ___) |>  # Fill in grouping variables
+  summarise(
+    prop_correct = mean(___),  # Fill in column name
+    trials = n(), 
+    .groups = "drop"
+  )
+
+# TODO: Pivot wider
+# Hint: Use pivot_wider() to make conditions into separate columns
+# Complete this structure:
+acc_wide <- acc_by_cb |>
+  pivot_wider(
+    names_from = ___,     # Fill in the column to become column names
+    values_from = ___     # Fill in the column to become values
+  )
+
+# View the results
+print("Summary by condition and block:")
+print(acc_by_cb)
+print("Wide format:")
+print(acc_wide)
+```
+
+Inline prompt: "Overall accuracy = `r NA`. Easy = `r NA`, Hard = `r NA`." Replace NA with inline code.
+
+## C. Reaction times (RT): shifted lognormal
+
+RTs are famously right-skewed (ie., sometimes participants take a very long time to respond). This looks reallly different than a normal distribution. We'll use `t0 + LogNormal(μ, σ)` to approximately simulate their distribution `t0` can be thought of a "baseline" reaction time that could vary by participant.
+
+### Simulating reaction times
+
+Tasks: - Simulate **n = 500** RTs with `t0 = 300`, `meanlog = log(250)`, `sdlog = 0.35` into `rt_df`. - Plot a histogram and compute **mean**, **median**, **max**. - Create `log_rt = log(rt)` and compare distributions
+
+Here's a helper function to create lognormal RTs with a baseline shift. Note on these parameters: In a lognormal distribution, the parameters `meanlog` and `sdlog` describe the underlying normal distribution on the log scale, NOT the mean and standard deviation of the observed reaction times. If we want RTs centered around 250 ms, we set `meanlog` = log(250) because the median of a lognormal is `exp(meanlog)`---so this choice makes the median RT about 250 ms. The `sdlog` parameter controls the amount of skew on the log scale: typical behavioral data are well-modeled by `sdlog` values between about 0.3 and 0.5. Using `sdlog` = log(20) would be incorrect, because \`sdlog already represents variability on the log scale; taking the log of a raw-scale SD would produce unrealistically long-tailed RTs spanning thousands of milliseconds. You don't need to understand all of these details, but I realize it could be confusing and so wanted to include this explanation.
+
+```{r}
+# Helper: shifted lognormal RTs (t0 + LogNormal(meanlog, sdlog))
+r_shifted_lognorm <- function(n, t0, meanlog, sdlog) {
+  t0 + rlnorm(n, meanlog = meanlog, sdlog = sdlog)
+}
+```
+
+```{r}
+#| label: lognormal-single
+# TODO: Simulate RTs and their logged RTs
+# Hint: Use the r_shifted_lognorm() function with the specified parameters
+# Create a tibble with rt and log_rt columns
+
+# Complete this structure:
+rt_df <- tibble(
+  rt = r_shifted_lognorm(___, t0 = ___, meanlog = ___, sdlog = ___)  # Fill in the parameters
+) |>
+  mutate(log_rt = log(___))  # Fill in the column name
+
+# Check the first few rows
+head(rt_df)
+```
+
+Now look at their relationship -- hint is to use qplot, or you can use ggplot. You'll need the `$` operator (e.g., `rt_df$rt`) to grab a particular column from a dataframe in base R.
+
+```{r}
+# TODO: Plot rt vs log_rt
+# Hint: Use qplot() or ggplot()
+# Complete one of these options:
+
+# Option 1: Using qplot (simpler)
+qplot(___, ___)  # Fill in the two column names
+
+# Option 2: Using ggplot (more flexible)
+ggplot(rt_df, aes(x = ___, y = ___)) +  # Fill in x and y column names
+  geom_point(alpha = 0.5) +
+  labs(x = "RT (ms)", y = "Log RT")
+```
+
+OK, now let's make some summaries. Use the summarize function to calculate the mean, median, max, and sd of the rt distribution. Note that you don't have to make a new dataframe for this.
+
+```{r}
+# TODO: summaries
+# Hint: Use summarise() to calculate mean_rt, median_rt, max_rt, sd_rt
+# Complete this structure:
+rt_df_summary <- rt_df |>
+  summarise(
+    mean_rt = mean(___),    # Fill in column name
+    median_rt = median(___), # Fill in column name
+    max_rt = max(___),      # Fill in column name
+    sd_rt = sd(___)         # Fill in column name
+  )
+
+# Print the results
+print(rt_df_summary)
+```
+
+## D. Two conditions: valid vs invalid cue
+
+Backstory. In a spatial attention task (think Posner cueing), each trial begins with a cue that is either valid (points to the upcoming target location) or invalid (points away). Valid cues help orient attention and typically speed responses; invalid cues slow responses. Reaction times (RTs) are right-skewed, as in the prior example. Let's try to simulate valid and invalid trials.
+
+Add a **condition** factor. Suppose invalid cues slow responses by \~**40 ms** on average.
+
+### Try it
+
+```{r}
+# TODO: Simulate RTs for valid and invalid conditions
+# Hint: Use r_shifted_lognorm() with different parameters for each condition
+# Invalid cues should be slower (higher meanlog)
+
+# Complete this structure:
+rt_df_valid_invalid <- tibble(
+  rt_valid = r_shifted_lognorm(___, t0 = ___, meanlog = ___, sdlog = ___),     # Fill in parameters for valid condition
+  rt_invalid = r_shifted_lognorm(___, t0 = ___, meanlog = ___, sdlog = ___)   # Fill in parameters for invalid condition (slower)
+)
+
+# Check the first few rows
+head(rt_df_valid_invalid)
+```
+
+Use `pivot_longer` to make this a long dataframe, where `rt` is just one column, and you have `condition` in another column. Use the `?` to look at the arguments for the function.
+
+```{r}
+# TODO: Use pivot_longer to reshape the data
+# Hint: Convert rt_valid and rt_invalid columns into rt and condition columns
+# Complete this structure:
+rt_df_valid_invalid_longer <- rt_df_valid_invalid |>
+  pivot_longer(
+    cols = c(___, ___),        # Fill in the column names to pivot
+    values_to = ___,           # Fill in the name for the values column
+    names_to = ___             # Fill in the name for the names column
+  )
+
+# Check the first few rows
+head(rt_df_valid_invalid_longer)
+```
+
+Now, use `group_by(condition)` before commuting your summaries in tidyverse -- you should see outputs grouped by condition.
+
+```{r}
+
+# TODO: group_by() condition and summarise mean_rt, sd_rt
+# Hint: Use group_by(condition) then summarise()
+# Complete this structure:
+valid_invalid_summary <- rt_df_valid_invalid_longer |>
+  group_by(___) |>  # Fill in the grouping variable
+  summarise(
+    mean_rt = mean(___),  # Fill in column name
+    sd_rt = sd(___),      # Fill in column name
+    n = n()
+  )
+
+# Print the results
+print(valid_invalid_summary)
+```
+
+Now, make some sort of visual of the two distributions. Give the raw dataframe to ggplot, and use `geom_density` to plot the density (you can toggle `alpha` here to change the transparency). Use `fill=condition` within `aes` to specify that the two conditions should have different colors.
+
+```{R}
+## TODO: Use ggplot to make density plot of simulated data
+# Hint: Use geom_density() with fill=condition in aes()
+# Complete this structure:
+ggplot(___, aes(x = ___, fill = ___)) +  # Fill in dataframe and column names
+  geom_density(alpha = ___) +            # Fill in alpha value (0-1)
+  labs(title = "Cueing Cost as Shift in Distribution", x = "RT (ms)", y = "Density")
+```
+
+BONUS. Okay, so far you've been simulating "raw" data -- i.e., 500 trials of valid, and 500 trials of invalid cueing. Try simulating 10 different participants, where each participant completes 200 trials.
+
+```{r}
+# TODO: Simulate multiple participants
+# Hint: Use a for loop to iterate over participants
+# Each participant should have different baseline shifts
+# Use bind_rows() to combine all participant data
+
+# Set up parameters
+num_participants <- 10
+num_trials_per_condition <- 100
+
+# Start with an empty tibble
+df_experiment <- tibble()
+
+# Loop over participants
+for (i in 1:num_participants) {
+  print(paste("Simulating participant", i))
+  
+  # Random baseline shift for this participant 
+  baseline_shift <- rnorm(1, mean = 0, sd = 80)
+  
+  # Simulate trials for this participant
+  sim_subj <- tibble(
+    participant = ___,
+    condition = rep(c("valid", "invalid"), each = ___),
+    trial = rep(1:___, times = 2),
+    rt = c(
+      r_shifted_lognorm(___, t0 = 300 + baseline_shift, meanlog = log(250), sdlog = 0.35),
+      r_shifted_lognorm(___, t0 = 300 + baseline_shift, meanlog = log(290), sdlog = 0.35)
+    )
+  ) |>
+    mutate(log_rt = log(rt))
+  
+  # Append to growing data frame
+  df_experiment <- bind_rows(df_experiment, sim_subj)
+}
+
+# Check the structure
+head(df_experiment)
+```
+
+```{r}
+# TODO: Summarize by participant and condition
+# Hint: Use group_by(participant, condition) and summarise()
+# Complete this structure:
+df_experiment_summary <- df_experiment |>
+  group_by(___, ___) |>  # Fill in grouping variables
+  summarise(
+    mean_rt = mean(___),  # Fill in column name
+    n_trials = n()
+  )
+
+# Print the results
+print(df_experiment_summary)
+```
+
+BONUS: Plot average RTs and 95 CIs over individual subjects. You can reuse `stat_summary` arguments for the mean and CIs from above. Plot raw data points from each participant using `geom_point`.
+
+```{r}
+# TODO: Plot average RTs and 95 CIs over individual subjects
+# Hint: Use stat_summary() for means and CIs, geom_point() for individual data
+# Complete this structure:
+ggplot(___, aes(x = ___, y = ___, color = ___, fill = ___)) +  # Fill in dataframe and aesthetics
+  geom_point(alpha = 0.6) +  # Individual subject means
+  geom_line(aes(group = ___), alpha = 0.1, color = 'grey') +  # Connect data from each participant
+  stat_summary(fun = mean, geom = "point", size = 3) +  # Overall mean
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +  # 95% CIs
+  labs(x = "Condition", y = "Average RT", title = "RT by Simulated Cueing Condition")
+```
