@@ -179,7 +179,7 @@ r_shifted_lognorm <- function(n, t0, meanlog, sdlog) {
 #| label: lognormal-single
 # Here's the basic way you could simulate RTs and their logged RTs
 rt_df <- tibble(
-  rt = r_shifted_lognorm(500, t0 = 300, meanlog = log(250), sdlog = log(20))
+  rt = r_shifted_lognorm(500, t0 = 300, meanlog = log(250), sdlog = .35)
 ) |>
   mutate(log_rt = log(rt))
 ```
