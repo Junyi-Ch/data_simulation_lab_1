@@ -61,15 +61,15 @@ Calculate some basic summaries of this dataframe and print them out
 # Hint: Use summarise() with mean(), sd(), and n()
 # Start with this structure and fill in the missing parts:
 
-norm_df_summary <- norm_df |> 
-  summarise(
-    mean = mean(___),  # Fill in the column name
-    sd = sd(___),      # Fill in the column name  
-    n = n()            # This one is already done!
-  )
+# norm_df_summary <- norm_df |> 
+  # summarise(
+   # mean = mean(___),  # Fill in the column name
+   # sd = sd(___),      # Fill in the column name  
+  #  n = n()            # This one is already done!
+ # )
 
 # Print the results
-print(norm_df_summary)
+#print(norm_df_summary)
 
 # What happens if you increase the "n"? How do these summaries change?
 ```
@@ -246,9 +246,9 @@ Now look at their relationship -- hint is to use qplot, or you can use ggplot. Y
 qplot(rt_df$rt, rt_df$log_rt)  # Fill in the two column names
 
 # Option 2: Using ggplot (more flexible)
-ggplot(rt_df, aes(x = ___, y = ___)) +  # Fill in x and y column names
-  geom_point(alpha = 0.5) +
-  labs(x = "RT (ms)", y = "Log RT")
+#_, y = ___)) +  # Fill in x and y column names
+  #geom_point(alpha = 0.5) +
+ # labs(x = "RT (ms)", y = "Log RT")
 ```
 
 OK, now let's make some summaries. Use the summarize function to calculate the mean, median, max, and sd of the rt distribution. Note that you don't have to make a new dataframe for this.
@@ -349,52 +349,52 @@ BONUS. Okay, so far you've been simulating "raw" data -- i.e., 500 trials of val
 # Use bind_rows() to combine all participant data
 
 # Set up parameters
-num_participants <- 10
-num_trials_per_condition <- 100
+# num_participants <- 10
+# num_trials_per_condition <- 100
 
-# Start with an empty tibble
-df_experiment <- tibble()
+# # Start with an empty tibble
+# df_experiment <- tibble()
 
-# Loop over participants
-for (i in 1:num_participants) {
-  print(paste("Simulating participant", i))
+# # Loop over participants
+# for (i in 1:num_participants) {
+#   print(paste("Simulating participant", i))
   
-  # Random baseline shift for this participant 
-  baseline_shift <- rnorm(1, mean = 0, sd = 80)
+#   # Random baseline shift for this participant 
+#   baseline_shift <- rnorm(1, mean = 0, sd = 80)
   
-  # Simulate trials for this participant
-  sim_subj <- tibble(
-    participant = ___,
-    condition = rep(c("valid", "invalid"), each = ___),
-    trial = rep(1:___, times = 2),
-    rt = c(
-      r_shifted_lognorm(___, t0 = 300 + baseline_shift, meanlog = log(250), sdlog = 0.35),
-      r_shifted_lognorm(___, t0 = 300 + baseline_shift, meanlog = log(290), sdlog = 0.35)
-    )
-  ) |>
-    mutate(log_rt = log(rt))
+#   # Simulate trials for this participant
+#   #sim_subj <- tibble(
+#     participant = ___,
+#     condition = rep(c("valid", "invalid"), each = ___),
+#     trial = rep(1:___, times = 2),
+#     rt = c(
+#       r_shifted_lognorm(___, t0 = 300 + baseline_shift, meanlog = log(250), sdlog = 0.35),
+#       r_shifted_lognorm(___, t0 = 300 + baseline_shift, meanlog = log(290), sdlog = 0.35)
+#     )
+#   ) |>
+#     mutate(log_rt = log(rt))
   
-  # Append to growing data frame
-  df_experiment <- bind_rows(df_experiment, sim_subj)
-}
+#   # Append to growing data frame
+#   df_experiment <- bind_rows(df_experiment, sim_subj)
+# }
 
 # Check the structure
-head(df_experiment)
+# head(df_experiment)
 ```
 
 ```{r}
 # TODO: Summarize by participant and condition
 # Hint: Use group_by(participant, condition) and summarise()
 # Complete this structure:
-df_experiment_summary <- df_experiment |>
-  group_by(___, ___) |>  # Fill in grouping variables
-  summarise(
-    mean_rt = mean(___),  # Fill in column name
-    n_trials = n()
-  )
+# df_experiment_summary <- df_experiment |>
+#   group_by(___, ___) |>  # Fill in grouping variables
+#   summarise(
+#     mean_rt = mean(___),  # Fill in column name
+#     n_trials = n()
+#   )
 
-# Print the results
-print(df_experiment_summary)
+# # Print the results
+# print(df_experiment_summary)
 ```
 
 BONUS: Plot average RTs and 95 CIs over individual subjects. You can reuse `stat_summary` arguments for the mean and CIs from above. Plot raw data points from each participant using `geom_point`.
@@ -403,10 +403,10 @@ BONUS: Plot average RTs and 95 CIs over individual subjects. You can reuse `stat
 # TODO: Plot average RTs and 95 CIs over individual subjects
 # Hint: Use stat_summary() for means and CIs, geom_point() for individual data
 # Complete this structure:
-ggplot(___, aes(x = ___, y = ___, color = ___, fill = ___)) +  # Fill in dataframe and aesthetics
-  geom_point(alpha = 0.6) +  # Individual subject means
-  geom_line(aes(group = ___), alpha = 0.1, color = 'grey') +  # Connect data from each participant
-  stat_summary(fun = mean, geom = "point", size = 3) +  # Overall mean
-  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +  # 95% CIs
-  labs(x = "Condition", y = "Average RT", title = "RT by Simulated Cueing Condition")
-```
+# ggplot(___, aes(x = ___, y = ___, color = ___, fill = ___)) +  # Fill in dataframe and aesthetics
+#   geom_point(alpha = 0.6) +  # Individual subject means
+#   geom_line(aes(group = ___), alpha = 0.1, color = 'grey') +  # Connect data from each participant
+#   stat_summary(fun = mean, geom = "point", size = 3) +  # Overall mean
+#   stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1) +  # 95% CIs
+#   labs(x = "Condition", y = "Average RT", title = "RT by Simulated Cueing Condition")
+# ```
